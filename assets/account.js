@@ -52,7 +52,7 @@
         dev(devbox, r.devOtp);
         return;
       }
-      location.href = "profile.html";
+      location.href = "/profile";
     });
     const mfaResend = $("[data-mfa-resend]");
     if (mfaResend) mfaResend.addEventListener("click", async (ev) => {
@@ -66,7 +66,7 @@
       const box = $(".form-error", fLogin);
       const r = await api("/login/mfa", { method: "POST", body: { email: fLogin.email.value.trim(), code: fLogin.mfacode.value.trim() } });
       if (!r.ok) return err(box, r.error);
-      location.href = "profile.html";
+      location.href = "/profile";
     });
 
     /* — OTP sign-in — */
@@ -87,7 +87,7 @@
       const box = $(".form-error", fOtp);
       const r = await api("/otp/verify", { method: "POST", body: { email: fOtp.email.value.trim(), code: fOtp.code.value.trim() } });
       if (!r.ok) return err(box, r.error);
-      location.href = "profile.html";
+      location.href = "/profile";
     });
 
     /* — registration (consent required) + email verification — */
@@ -123,7 +123,7 @@
       const box = $(".form-error", fReg);
       const r = await api("/verify-email", { method: "POST", body: { email: fReg.email.value.trim(), code: fReg.vcode.value.trim() } });
       if (!r.ok) return err(box, r.error);
-      location.href = "profile.html";
+      location.href = "/profile";
     });
   }
 
@@ -320,7 +320,7 @@
     /* sign out */
     $$("[data-logout]").forEach((b) => b.addEventListener("click", async () => {
       await api("/logout", { method: "POST" });
-      location.href = "account.html";
+      location.href = "/account";
     }));
 
     /* delete account */
@@ -342,7 +342,7 @@
       const r = await api("/me/delete", { method: "POST", body: { password: $("[data-del-pass]").value, code: $("[data-del-code]").value.trim() } });
       if (!r.ok) return err(box, r.error);
       alert("Your account and personal data have been deleted. We're sorry to see you go.");
-      location.href = "index.html";
+      location.href = "/";
     });
   }
 })();
