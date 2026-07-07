@@ -55,9 +55,10 @@
     }
 
     /* ───── active nav ───── */
-    var path = location.pathname.split("/").pop() || "index.html";
+    var norm = function(s){ s = String(s||"").split("?")[0].split("/").pop() || "index.html"; return (s.replace(/\.html$/,"") || "index"); };
+    var path = norm(location.pathname);
     document.querySelectorAll("[data-nav]").forEach(function(a){
-      if(a.getAttribute("data-nav") === path) a.classList.add("is-current");
+      if(norm(a.getAttribute("data-nav")) === path) a.classList.add("is-current");
     });
 
     /* ───── nav: solid on scroll + hide on scroll-down ───── */
@@ -496,8 +497,7 @@
       if(localStorage.getItem("ni_consent")!=="all") return;
       try{
         var body = JSON.stringify({p:location.pathname,r:document.referrer.slice(0,200)});
-        navigator.sendBeacon ? navigator.sendBeacon("/api/pv", new Blob([body],{type:"application/json"}))
-          : fetch("/api/pv",{method:"POST",headers:{"Content-Type":"application/json"},body:body,keepalive:true});
+        fetch("/api/pv",{method:"POST",headers:{"Content-Type":"application/json"},body:body,keepalive:true});
       }catch(e){}
     }
     if(!C && banner){ banner.classList.add("show"); }
