@@ -12,7 +12,11 @@
 // Render URL (Dashboard → next-imaginations-api → the .onrender.com URL).
 
 (function () {
-  var API_BASE = "https://next-imaginations-api.onrender.com"; // ← EDIT ME
+  // Production domain talks to the branded API subdomain; the .vercel.app
+  // URL (and previews) talk straight to Render.
+  var API_BASE = /(^|\.)nextimaginations\.com$/.test(location.hostname)
+    ? "https://api.nextimaginations.com"
+    : "https://next-imaginations-api.onrender.com";
 
   // Local development (node server.js serving the site itself): leave
   // relative URLs alone so everything still works same-origin.
