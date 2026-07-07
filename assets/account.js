@@ -54,6 +54,14 @@
       }
       location.href = "profile.html";
     });
+    const mfaResend = $("[data-mfa-resend]");
+    if (mfaResend) mfaResend.addEventListener("click", async (ev) => {
+      ev.preventDefault();
+      mfaResend.textContent = "sending…";
+      const r = await api("/login", { method: "POST", body: { email: fLogin.email.value.trim(), password: fLogin.password.value } });
+      mfaResend.textContent = (r.ok && r.next === "mfa") ? "code sent — check your inbox" : (r.error || "could not send");
+      setTimeout(() => { mfaResend.textContent = "Send a new code"; }, 6000);
+    });
     $("[data-login-mfa-btn]").addEventListener("click", async () => {
       const box = $(".form-error", fLogin);
       const r = await api("/login/mfa", { method: "POST", body: { email: fLogin.email.value.trim(), code: fLogin.mfacode.value.trim() } });
@@ -101,6 +109,15 @@
       $("[data-reg-step1]", fReg).style.display = "none";
       $("[data-reg-verify]", fReg).style.display = "block";
       dev(devbox, r.devOtp);
+    });
+    const regResend = $("[data-reg-resend]");
+    if (regResend) regResend.addEventListener("click", async (ev) => {
+      ev.preventDefault();
+      regResend.textContent = "sending…";
+      const r = await api("/verify-email/resend", { method: "POST", body: { email: fReg.email.value.trim() } });
+      regResend.textContent = r.ok ? "code sent — check your inbox" : (r.error || "could not send, try again");
+      if (r.devOtp) dev($("[data-reg-dev]"), r.devOtp);
+      setTimeout(() => { regResend.textContent = "send a new code"; }, 6000);
     });
     $("[data-reg-verify-btn]").addEventListener("click", async () => {
       const box = $(".form-error", fReg);
