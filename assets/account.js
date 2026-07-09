@@ -17,6 +17,7 @@
     return { status: res.status, ...data };
   };
   const inr = (n) => "₹" + Number(n || 0).toLocaleString("en-IN");
+  const refNo = (id) => "NI-" + String(id || "").slice(-6).toUpperCase();
   const when = (s) => { try { return new Date(s.replace(" ", "T") + (s.includes("Z") ? "" : "Z")).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }); } catch (_) { return s; } };
   const err = (box, msg) => { if (box) { box.textContent = msg || ""; box.classList.toggle("show", Boolean(msg)); } };
   const ok = (box, msg) => { if (box) { box.textContent = msg || ""; box.classList.toggle("show", Boolean(msg)); } };
@@ -187,18 +188,18 @@
       oHost.innerHTML = orders.length
         ? orders.map((r) => `<div class="switchrow" style="flex-direction:column;align-items:stretch;margin-bottom:.8rem">
             <div style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;align-items:baseline">
-              <div><b>#${r.id} · ${esc(r.title)}</b><small>${esc(r.service || "")} · started ${when(r.created_at)}</small></div>
+              <div><b>${refNo(r.id)} · ${esc(r.title)}</b><small>${esc(r.service || "")} · started ${when(r.created_at)}</small></div>
               <div style="text-align:right"><span class="num" style="font-family:var(--f-mono);color:var(--gold-2)">${inr(r.amount_inr)}</span><br><span class="pill ${esc(r.status)}">${esc(r.status)}</span></div>
             </div>${railFor(r)}${r.notes ? `<small style="color:var(--on-wine-mute)">${esc(r.notes)}</small>` : ""}</div>`).join("")
         : `<div class="empty">No orders yet. When a project begins, it appears here with its live milestone timeline.</div>`;
       fill("[data-payments]", pays,
         "No payments recorded yet. Every payment against your projects is listed here with its reference.",
         (rows) => `<tr><th>#</th><th>Order</th><th>Amount</th><th>Method</th><th>Status</th><th>Date</th><th></th></tr>` +
-          rows.map((r) => `<tr><td class="num">${r.id}</td><td class="num">${r.order_id ?? "—"}</td><td class="num">${inr(r.amount_inr)}</td><td>${esc(r.method || "—")}</td><td><span class="pill ${esc(r.status)}">${esc(r.status)}</span></td><td>${when(r.paid_at || r.created_at)}</td><td style="white-space:nowrap"><a class="tlink" style="display:inline-flex" href="${(window.__API_BASE||"")}/api/auth/me/payments/${r.id}/invoice.pdf" target="_blank">Invoice ↧</a>${r.status === "pending" && window.__rzp ? ` · <button class="tlink" data-pay="${r.id}" style="background:none;border:0;cursor:pointer;color:var(--gold-2)">Pay now</button>` : ""}</td></tr>`).join(""));
+          rows.map((r) => `<tr><td class="num">${refNo(r.id)}</td><td class="num">${r.order_id ? refNo(r.order_id) : "—"}</td><td class="num">${inr(r.amount_inr)}</td><td>${esc(r.method || "—")}</td><td><span class="pill ${esc(r.status)}">${esc(r.status)}</span></td><td>${when(r.paid_at || r.created_at)}</td><td style="white-space:nowrap"><a class="tlink" style="display:inline-flex" href="${(window.__API_BASE||"")}/api/auth/me/payments/${r.id}/invoice.pdf" target="_blank">Invoice ↧</a>${r.status === "pending" && window.__rzp ? ` · <button class="tlink" data-pay="${r.id}" style="background:none;border:0;cursor:pointer;color:var(--gold-2)">Pay now</button>` : ""}</td></tr>`).join(""));
       fill("[data-enquiries]", enqs,
         "No enquiries on record for this email.",
         (rows) => `<tr><th>#</th><th>Interest</th><th>Message</th><th>Status</th><th>Sent</th></tr>` +
-          rows.map((r) => `<tr><td class="num">${r.id}</td><td>${esc(r.interest || "—")}</td><td style="max-width:340px;white-space:normal">${esc(r.message).slice(0, 160)}</td><td><span class="pill">${esc(r.status)}</span></td><td>${when(r.created_at)}</td></tr>`).join(""));
+          rows.map((r) => `<tr><td class="num">${refNo(r.id)}</td><td>${esc(r.interest || "—")}</td><td style="max-width:340px;white-space:normal">${esc(r.message).slice(0, 160)}</td><td><span class="pill">${esc(r.status)}</span></td><td>${when(r.created_at)}</td></tr>`).join(""));
 
       const s = await api("/me/sessions");
       $("[data-sessions]").innerHTML = (s.sessions || []).map((x) =>
