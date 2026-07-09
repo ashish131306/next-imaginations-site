@@ -930,8 +930,6 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .contact-card__actions{display:flex;flex-wrap:wrap;gap:.75rem}
 .contact-card--link{text-decoration:none;color:inherit;transition:border-color .35s var(--ease),background .35s var(--ease),transform .35s var(--ease)}
 .contact-card--link:hover{border-color:var(--gold-line);background:var(--wine-rich);transform:translateY(-2px)}
-.consult{max-width:480px;margin-top:2.2rem}
-.consult .field{margin-bottom:1rem}
 .contact-card__cta{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-2);white-space:nowrap}
 /* accessible keyboard focus (professional + WCAG) */
 a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{
@@ -961,3 +959,19 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 .need__i svg{width:24px;height:24px}
 .need h3{font-family:var(--f-display);font-weight:500;font-size:1.2rem;line-height:1.25;color:var(--on-wine);margin-bottom:.5rem}
 .need p{font-size:.9rem;color:var(--on-wine-mute);line-height:1.55}
+
+.paybox{max-width:520px;margin-top:2.2rem}
+.paybox .field{margin-bottom:1rem}
+.pay-opts{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.2rem}
+.pay-opt{display:flex;align-items:center;gap:.55rem;border:1px solid var(--gold-line-2);border-radius:6px;padding:.7rem 1rem;cursor:pointer;font-size:.92rem;flex:1;min-width:180px}
+.pay-opt input{width:auto;margin:0}
+.pay-opt b{color:var(--gold-2);margin-left:auto}
+.coupon-row{display:flex;gap:.6rem;align-items:stretch}
+.coupon-row input{flex:1;text-transform:uppercase}
+.coupon-row .btn{padding:0 1.2rem;white-space:nowrap}
+.coupon-chip{display:inline-block;cursor:pointer;border:1px dashed var(--gold-line);border-radius:20px;padding:.2rem .7rem;color:var(--gold-2);font-family:var(--f-mono);font-size:.62rem;letter-spacing:.06em}
+.coupon-chip:hover{background:var(--gold-faint)}
+.pay-summary{border-top:1px solid var(--gold-line-2);margin:1.4rem 0;padding-top:1rem}
+.pay-line{display:flex;justify-content:space-between;padding:.28rem 0;color:var(--on-wine-mute)}
+.pay-total{border-top:1px solid var(--gold-line-2);margin-top:.5rem;padding-top:.7rem;color:var(--paper);font-family:Georgia,serif;font-size:1.25rem}
+.pay-total span:last-child{color:var(--gold-2)}

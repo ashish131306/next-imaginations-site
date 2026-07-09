@@ -502,43 +502,78 @@
       });
     });
 
-    /* paid consultation checkout */
-    var cform = document.querySelector("[data-consult]");
-    if(cform){
-      var cbtn = cform.querySelector("[data-consult-btn]");
-      var cmsg = cform.querySelector("[data-consult-msg]");
-      var reset = function(){ cbtn.disabled=false; cbtn.textContent="Pay \u20B9500 & book"; };
-      fetch("/api/consultation/config").then(function(r){return r.json()}).then(function(cfg){
-        if(cfg && cfg.enabled===false){ cbtn.disabled=true; cmsg.style.color="#e0b978"; cmsg.textContent="Online booking is being switched on \u2014 please WhatsApp us to book meanwhile."; }
-      }).catch(function(){});
-      cform.addEventListener("submit", function(ev){
-        ev.preventDefault();
-        cmsg.style.color=""; cmsg.textContent="";
-        var name=cform.name.value.trim(), email=cform.email.value.trim(), note=cform.note.value.trim();
-        if(!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ cmsg.style.color="#eca3a3"; cmsg.textContent="Please enter your name and a valid email."; return; }
-        if(typeof Razorpay==="undefined"){ cmsg.style.color="#eca3a3"; cmsg.textContent="Payment library didn\u2019t load \u2014 please refresh and try again."; return; }
-        cbtn.disabled=true; cbtn.textContent="Starting\u2026";
-        fetch("/api/consultation/order",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"})
-          .then(function(r){return r.json()})
-          .then(function(o){
-            if(!o.ok){ throw new Error(o.error||"Could not start payment."); }
-            var rz=new Razorpay({ key:o.keyId, amount:o.amount, currency:"INR", name:"Next Imaginations", description:"45-minute paid consultation", order_id:o.orderId,
-              prefill:{ name:name, email:email }, theme:{ color:"#C6A052" },
-              modal:{ ondismiss:reset },
-              handler:function(resp){
-                cmsg.style.color=""; cmsg.textContent="Confirming your payment\u2026";
-                fetch("/api/consultation/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({order_id:resp.razorpay_order_id,payment_id:resp.razorpay_payment_id,signature:resp.razorpay_signature,name:name,email:email,note:note})})
-                  .then(function(r){return r.json()})
-                  .then(function(v){
-                    if(v.ok){ cform.innerHTML='<div class="reveal in"><span class="eyebrow" style="color:#9ed8a8">Booked \u2713</span><p class="lead mt-1" style="max-width:52ch">Thank you \u2014 your consultation is booked and a receipt is on its way to your inbox. A senior consultant will email you within one business day to schedule.</p></div>'; }
-                    else { cmsg.style.color="#eca3a3"; cmsg.textContent=v.error||"We couldn\u2019t confirm the payment. If any amount was deducted it auto-refunds; please contact us."; reset(); }
-                  }).catch(function(){ cmsg.style.color="#eca3a3"; cmsg.textContent="Network error confirming payment \u2014 please contact us."; reset(); });
-              }
+    /* ── public payment widget: consultation / custom amount + coupon ── */
+    var payForm = document.querySelector("[data-pay]");
+    if(payForm){
+      var q$ = function(s){ return payForm.querySelector(s); };
+      var payBtn=q$("[data-pay-btn]"), payMsg=q$("[data-pay-msg]");
+      var couponInput=payForm.coupon, couponMsg=q$("[data-coupon-msg]"), couponSuggest=q$("[data-coupon-suggest]");
+      var amountRow=q$("[data-amount-row]");
+      var subEl=q$("[data-sub]"), discRow=q$("[data-disc-row]"), discEl=q$("[data-disc]"), totalEl=q$("[data-total]");
+      var rs=function(n){ return "₹"+Number(n||0).toLocaleString("en-IN"); };
+      var KEY=null, ENABLED=false, applied=null, curTotal=0, tmr=null;
+      var say=function(el,msg,kind){ el.textContent=msg||""; el.style.color=kind==="ok"?"#9ed8a8":(kind==="err"?"#eca3a3":""); };
+      var getKind=function(){ var c=payForm.querySelector('input[name=kind]:checked'); return c?c.value:"consultation"; };
+      var getAmount=function(){ return getKind()==="custom" ? Number(payForm.amount.value||0) : 500; };
+      var setBtn=function(){ payBtn.textContent="Pay "+rs(curTotal)+(getKind()==="consultation"?" & book":""); };
+      var api=function(path,body){ return fetch(path,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body||{})}).then(function(r){return r.json()}); };
+
+      var refresh=function(){
+        var kind=getKind(), amount=getAmount(), coupon=(couponInput.value||"").trim();
+        api("/api/pay/quote",{kind:kind,amount:amount}).then(function(base){
+          if(!base.ok){ subEl.textContent="—"; discRow.style.display="none"; totalEl.textContent="—"; curTotal=0; payBtn.disabled=true; say(payMsg,base.error,"err"); payBtn.textContent="Pay"; return; }
+          say(payMsg,"","");
+          var sub=base.subtotal, discount=0, total=base.total;
+          var done=function(){ subEl.textContent=rs(sub); if(discount>0){ discRow.style.display=""; discEl.textContent="−"+rs(discount); } else { discRow.style.display="none"; } totalEl.textContent=rs(total); curTotal=total; payBtn.disabled=!ENABLED; setBtn(); };
+          if(coupon){
+            api("/api/pay/quote",{kind:kind,amount:amount,coupon:coupon}).then(function(cq){
+              if(cq.ok && cq.coupon){ discount=cq.discount; total=cq.total; applied=cq.coupon; say(couponMsg,"✓ "+cq.coupon+" applied — you save "+rs(discount),"ok"); }
+              else { applied=null; say(couponMsg, cq.error||"Coupon not applied.","err"); }
+              done();
             });
-            rz.on("payment.failed", function(resp){ cmsg.style.color="#eca3a3"; cmsg.textContent="Payment failed: "+((resp.error&&resp.error.description)||"please try again or use another method."); reset(); });
-            rz.open(); reset();
-          })
-          .catch(function(e){ cmsg.style.color="#eca3a3"; cmsg.textContent=e.message||"Something went wrong."; reset(); });
+          } else { applied=null; say(couponMsg,"",""); done(); }
+        }).catch(function(){});
+      };
+      var debounce=function(){ clearTimeout(tmr); tmr=setTimeout(refresh,350); };
+
+      fetch("/api/pay/config").then(function(r){return r.json()}).then(function(cfg){
+        ENABLED=!!(cfg&&cfg.enabled); KEY=cfg&&cfg.keyId;
+        if(!ENABLED){ payBtn.disabled=true; say(payMsg,"Online payments are being switched on — please WhatsApp us meanwhile.","err"); }
+        if(cfg&&cfg.coupons&&cfg.coupons.length){
+          couponSuggest.innerHTML="Try: "+cfg.coupons.map(function(c){ return '<span class="coupon-chip" data-code="'+c.code+'" title="'+(c.label||"")+'">'+c.code+"</span>"; }).join(" ");
+          couponSuggest.querySelectorAll("[data-code]").forEach(function(ch){ ch.addEventListener("click", function(){ couponInput.value=ch.getAttribute("data-code"); refresh(); }); });
+        }
+        refresh();
+      }).catch(function(){ refresh(); });
+
+      payForm.querySelectorAll('input[name=kind]').forEach(function(rd){ rd.addEventListener("change", function(){ amountRow.style.display=getKind()==="custom"?"":"none"; refresh(); }); });
+      if(payForm.amount) payForm.amount.addEventListener("input", debounce);
+      q$("[data-coupon-apply]").addEventListener("click", refresh);
+      couponInput.addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); refresh(); } });
+
+      payForm.addEventListener("submit", function(ev){
+        ev.preventDefault();
+        var name=payForm.name.value.trim(), email=payForm.email.value.trim(), note=payForm.note.value.trim();
+        if(!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ say(payMsg,"Please enter your name and a valid email.","err"); return; }
+        if(!ENABLED) return;
+        if(typeof Razorpay==="undefined"){ say(payMsg,"Payment library didn’t load — please refresh and try again.","err"); return; }
+        var reset=function(){ payBtn.disabled=false; setBtn(); };
+        payBtn.disabled=true; payBtn.textContent="Starting…";
+        api("/api/pay/order",{kind:getKind(),amount:getAmount(),coupon:applied||undefined,name:name,email:email,note:note}).then(function(o){
+          if(!o.ok) throw new Error(o.error||"Could not start payment.");
+          var rz=new Razorpay({ key:o.keyId, amount:o.amount, currency:"INR", name:"Next Imaginations", description:getKind()==="consultation"?"45-minute paid consultation":"Payment to Next Imaginations", order_id:o.orderId,
+            prefill:{ name:name, email:email }, theme:{ color:"#C6A052" }, modal:{ ondismiss:reset },
+            handler:function(resp){
+              say(payMsg,"Confirming your payment…","");
+              api("/api/pay/verify",{order_id:resp.razorpay_order_id,payment_id:resp.razorpay_payment_id,signature:resp.razorpay_signature}).then(function(v){
+                if(v.ok){ payForm.innerHTML='<div class="reveal in"><span class="eyebrow" style="color:#9ed8a8">Payment received ✓</span><p class="lead mt-1" style="max-width:52ch">Thank you — your payment is confirmed and a receipt is on its way to your inbox. We’ll be in touch within one business day.</p></div>'; }
+                else { say(payMsg, v.error||"We couldn’t confirm the payment. If any amount was deducted it auto-refunds; please contact us.","err"); reset(); }
+              }).catch(function(){ say(payMsg,"Network error confirming payment — please contact us.","err"); reset(); });
+            }
+          });
+          rz.on("payment.failed", function(resp){ say(payMsg,"Payment failed: "+((resp.error&&resp.error.description)||"please try again or use another method."),"err"); reset(); });
+          rz.open(); reset();
+        }).catch(function(e){ say(payMsg, e.message||"Something went wrong.","err"); reset(); });
       });
     }
 

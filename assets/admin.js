@@ -117,7 +117,8 @@
   function renderPayments(rows) {
     $("[data-payments]").innerHTML = rows.length ? rows.map((r) => `
       <tr><td class="muted" style="white-space:nowrap">${when(r.paid_at || r.created_at)}</td>
-      <td>${esc(r.email || "—")}</td><td>${inr(r.amount_inr)}</td>
+      <td>${esc(r.payer_name ? r.payer_name + " · " : "")}${esc(r.email || "—")}${r.kind && r.kind !== "payment" ? `<br><span class="muted" style="font-size:.7rem">${esc(r.kind)}</span>` : ""}</td>
+      <td>${inr(r.amount_inr)}${r.coupon ? `<br><span class="muted" style="font-size:.7rem">${esc(r.coupon)} −${inr(r.discount_inr || 0)}</span>` : ""}</td>
       <td>${esc((r.method || "—").toUpperCase())}</td>
       <td><span class="pill ${esc(r.status)}">${esc(r.status)}</span></td></tr>`).join("")
       : `<tr><td colspan="5" class="muted">No payments recorded.</td></tr>`;

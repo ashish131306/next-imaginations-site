@@ -19,7 +19,7 @@
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link href="/assets/fonts.css?v=4eaf30cd" rel="stylesheet">
-<link rel="stylesheet" href="/assets/styles.css?v=a2816e61">
+<link rel="stylesheet" href="/assets/styles.css?v=f8e418e1">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"Next Imaginations","url":"https://www.nextimaginations.com","slogan":"Build the new horizon.","description":"Tell us what you're building, fixing or improving. Every enquiry is read personally and answered within one business day. Call, email or WhatsApp — Mon–Sat, 9am–7pm IST.","telephone":"+91 89300 06242","email":"nextimaginations@gmail.com","foundingDate":"2022","address":{"@type":"PostalAddress","addressLocality":"Chandigarh","addressCountry":"IN"},"areaServed":"IN","priceRange":"₹₹ · ₹5,999–₹1,50,000+"}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How quickly can we start?","acceptedAnswer":{"@type":"Answer","text":"For most projects we can begin discovery within one to two weeks. Urgent work such as a security incident or data recovery is treated as a priority and answered the same day."}},{"@type":"Question","name":"Do you work with companies outside India?","acceptedAnswer":{"@type":"Answer","text":"Yes. We are remote-first and work across time zones, mostly asynchronously with scheduled calls when they matter."}},{"@type":"Question","name":"How do you price your work?","acceptedAnswer":{"@type":"Answer","text":"Fixed-scope projects are quoted with a clear price and timeline up front. Ongoing work runs on a monthly retainer. The numbers are agreed in writing before work begins."}},{"@type":"Question","name":"Will I work with the people who pitched me?","acceptedAnswer":{"@type":"Answer","text":"Always. The experienced professionals you speak to are the people who do the work."}}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.nextimaginations.com/index.html"}, {"@type": "ListItem", "position": 2, "name": "Contact"}]}</script>
 </head>
 <body class="is-loading">
@@ -209,15 +209,34 @@
 
   <section class="section section--tight bg-wine-deep rule-top">
     <div class="shell">
-      <div class="reveal"><span class="eyebrow">Paid consultation</span>
+      <div class="reveal"><span class="eyebrow">Make a payment</span>
       <h2 class="display d-2 mt-1">An expert plan<br><span class="accent">before you commit.</span></h2>
-      <p class="muted mt-1" style="max-width:58ch">Prefer something more in-depth than a free intro call? Book a focused 45-minute paid consultation. A senior consultant reviews your goals, audits your current website or systems, and gives you a clear, written action plan &mdash; yours to keep, whether or not you work with us. The &#8377;500 fee is credited in full against your first project if you go ahead.</p></div>
-      <form class="consult reveal d1" data-consult>
-        <div class="field"><label for="cs-name">Your name</label><input id="cs-name" name="name" required></div>
-        <div class="field"><label for="cs-email">Email (for your receipt &amp; scheduling)</label><input id="cs-email" name="email" type="email" required></div>
-        <div class="field"><label for="cs-note">What would you like to discuss? <span class="muted">(optional)</span></label><textarea id="cs-note" name="note" rows="2"></textarea></div>
-        <button class="btn btn--solid" type="submit" data-magnet="0.15" data-consult-btn>Pay &#8377;500 &amp; book <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M13 6l6 6-6 6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <p class="cap" data-consult-msg style="margin-top:.7rem;min-height:1em"></p>
+      <p class="muted mt-1" style="max-width:58ch">Book a focused 45-minute paid consultation, or pay a custom amount toward a project. A senior consultant reviews your goals and gives you a clear, written action plan &mdash; yours to keep, whether or not you work with us. A consultation fee is credited in full against your first project if you go ahead.</p></div>
+      <form class="paybox reveal d1" data-pay>
+        <div class="pay-opts">
+          <label class="pay-opt"><input type="radio" name="kind" value="consultation" checked> 45-min consultation <b>&#8377;500</b></label>
+          <label class="pay-opt"><input type="radio" name="kind" value="custom"> Other amount</label>
+        </div>
+        <div class="field" data-amount-row style="display:none"><label for="pc-amt">Amount (&#8377;)</label><input id="pc-amt" name="amount" type="number" min="100" step="1" inputmode="numeric" placeholder="e.g. 5000 (minimum &#8377;100)"></div>
+        <div class="field"><label for="pc-name">Your name</label><input id="pc-name" name="name" required></div>
+        <div class="field"><label for="pc-email">Email (for your receipt &amp; scheduling)</label><input id="pc-email" name="email" type="email" required></div>
+        <div class="field"><label for="pc-note">What would you like to discuss? <span class="muted">(optional)</span></label><textarea id="pc-note" name="note" rows="2"></textarea></div>
+        <div class="field">
+          <label for="pc-coupon">Promo code</label>
+          <div class="coupon-row">
+            <input id="pc-coupon" name="coupon" placeholder="Enter a code" autocapitalize="characters" autocomplete="off">
+            <button type="button" class="btn" data-coupon-apply>Apply</button>
+          </div>
+          <p class="cap" data-coupon-msg style="margin-top:.45rem;min-height:1em"></p>
+          <p class="cap muted" data-coupon-suggest style="margin-top:.15rem"></p>
+        </div>
+        <div class="pay-summary" data-summary>
+          <div class="pay-line"><span>Subtotal</span><span data-sub>&#8377;500</span></div>
+          <div class="pay-line" data-disc-row style="display:none"><span>Discount</span><span data-disc>&minus;&#8377;0</span></div>
+          <div class="pay-line pay-total"><span>Total</span><span data-total>&#8377;500</span></div>
+        </div>
+        <button class="btn btn--solid" type="submit" data-magnet="0.15" data-pay-btn>Pay &#8377;500 &amp; book <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M13 6l6 6-6 6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <p class="cap" data-pay-msg style="margin-top:.7rem;min-height:1em"></p>
         <p class="cap muted" style="margin-top:.3rem">Secure payment via Razorpay. You&rsquo;ll get a receipt by email and we&rsquo;ll write to schedule within one business day.</p>
       </form>
     </div>
@@ -317,6 +336,6 @@
   <p>We use one essential cookie to keep you signed in. Anonymous analytics run only with your permission. Details in our <a href="/privacy.html">Privacy Policy</a>.</p>
   <button class="btn" type="button" data-consent-essential>Essential only</button>
   <button class="btn btn--solid" type="button" data-consent-all>Allow analytics</button>
-</div><script src="https://checkout.razorpay.com/v1/checkout.js"></script><script src="/assets/api-base.js?v=573ad206"></script><script src="/assets/app.js?v=e52db483"></script>
+</div><script src="https://checkout.razorpay.com/v1/checkout.js"></script><script src="/assets/api-base.js?v=573ad206"></script><script src="/assets/app.js?v=56836cbf"></script>
 </body>
 </html>
