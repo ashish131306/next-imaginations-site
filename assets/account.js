@@ -162,6 +162,11 @@
       if (!r.ok) return location.replace("account.html");
       me = r.user; paintBadges();
 
+      // Load the Razorpay key BEFORE rendering payments, so the Pay-now button
+      // reliably appears on pending invoices (avoids an async render race).
+      const cfg = await fetch("/api/config").then((x) => x.json()).catch(() => ({}));
+      window.__rzp = cfg.rzpKey || null;
+
       const [o, p, e] = await Promise.all([api("/me/orders"), api("/me/payments"), api("/me/enquiries")]);
       const orders = o.orders || [], pays = p.payments || [], enqs = e.enquiries || [];
 
@@ -243,9 +248,7 @@
         });
       }
 
-      /* Razorpay pay-now */
-      const cfg = await fetch("/api/config").then((x) => x.json()).catch(() => ({}));
-      window.__rzp = cfg.rzpKey || null;
+      /* Razorpay pay-now (key already loaded above) */
       document.addEventListener("click", async (ev) => {
         const b = ev.target.closest("[data-pay]");
         if (!b) return;
