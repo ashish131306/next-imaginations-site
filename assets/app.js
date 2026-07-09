@@ -502,6 +502,46 @@
       });
     });
 
+    /* paid consultation checkout */
+    var cform = document.querySelector("[data-consult]");
+    if(cform){
+      var cbtn = cform.querySelector("[data-consult-btn]");
+      var cmsg = cform.querySelector("[data-consult-msg]");
+      var reset = function(){ cbtn.disabled=false; cbtn.textContent="Pay \u20B9500 & book"; };
+      fetch("/api/consultation/config").then(function(r){return r.json()}).then(function(cfg){
+        if(cfg && cfg.enabled===false){ cbtn.disabled=true; cmsg.style.color="#e0b978"; cmsg.textContent="Online booking is being switched on \u2014 please WhatsApp us to book meanwhile."; }
+      }).catch(function(){});
+      cform.addEventListener("submit", function(ev){
+        ev.preventDefault();
+        cmsg.style.color=""; cmsg.textContent="";
+        var name=cform.name.value.trim(), email=cform.email.value.trim(), note=cform.note.value.trim();
+        if(!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ cmsg.style.color="#eca3a3"; cmsg.textContent="Please enter your name and a valid email."; return; }
+        if(typeof Razorpay==="undefined"){ cmsg.style.color="#eca3a3"; cmsg.textContent="Payment library didn\u2019t load \u2014 please refresh and try again."; return; }
+        cbtn.disabled=true; cbtn.textContent="Starting\u2026";
+        fetch("/api/consultation/order",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}"})
+          .then(function(r){return r.json()})
+          .then(function(o){
+            if(!o.ok){ throw new Error(o.error||"Could not start payment."); }
+            var rz=new Razorpay({ key:o.keyId, amount:o.amount, currency:"INR", name:"Next Imaginations", description:"45-minute paid consultation", order_id:o.orderId,
+              prefill:{ name:name, email:email }, theme:{ color:"#C6A052" },
+              modal:{ ondismiss:reset },
+              handler:function(resp){
+                cmsg.style.color=""; cmsg.textContent="Confirming your payment\u2026";
+                fetch("/api/consultation/verify",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({order_id:resp.razorpay_order_id,payment_id:resp.razorpay_payment_id,signature:resp.razorpay_signature,name:name,email:email,note:note})})
+                  .then(function(r){return r.json()})
+                  .then(function(v){
+                    if(v.ok){ cform.innerHTML='<div class="reveal in"><span class="eyebrow" style="color:#9ed8a8">Booked \u2713</span><p class="lead mt-1" style="max-width:52ch">Thank you \u2014 your consultation is booked and a receipt is on its way to your inbox. A senior consultant will email you within one business day to schedule.</p></div>'; }
+                    else { cmsg.style.color="#eca3a3"; cmsg.textContent=v.error||"We couldn\u2019t confirm the payment. If any amount was deducted it auto-refunds; please contact us."; reset(); }
+                  }).catch(function(){ cmsg.style.color="#eca3a3"; cmsg.textContent="Network error confirming payment \u2014 please contact us."; reset(); });
+              }
+            });
+            rz.on("payment.failed", function(resp){ cmsg.style.color="#eca3a3"; cmsg.textContent="Payment failed: "+((resp.error&&resp.error.description)||"please try again or use another method."); reset(); });
+            rz.open(); reset();
+          })
+          .catch(function(e){ cmsg.style.color="#eca3a3"; cmsg.textContent=e.message||"Something went wrong."; reset(); });
+      });
+    }
+
     /* founding spots counter */
     var spEls=document.querySelectorAll("[data-spots]");
     if(spEls.length){ fetch("/api/spots").then(function(r){return r.json()}).then(function(d){ if(d&&d.ok) spEls.forEach(function(el){el.textContent=d.left}); }).catch(function(){ spEls.forEach(function(el){el.textContent="a few"}); }); }

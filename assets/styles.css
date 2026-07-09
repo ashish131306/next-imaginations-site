@@ -930,6 +930,8 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .contact-card__actions{display:flex;flex-wrap:wrap;gap:.75rem}
 .contact-card--link{text-decoration:none;color:inherit;transition:border-color .35s var(--ease),background .35s var(--ease),transform .35s var(--ease)}
 .contact-card--link:hover{border-color:var(--gold-line);background:var(--wine-rich);transform:translateY(-2px)}
+.consult{max-width:480px;margin-top:2.2rem}
+.consult .field{margin-bottom:1rem}
 .contact-card__cta{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-2);white-space:nowrap}
 /* accessible keyboard focus (professional + WCAG) */
 a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{
