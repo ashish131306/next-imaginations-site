@@ -318,7 +318,7 @@
       var ebBtn = builder.querySelector("[data-eb]");
       var ebOn = false;
       var $ = function(sel){ return builder.querySelector(sel); };
-      var fmt = function(n){ return "\u20B9" + Math.round(n).toLocaleString("en-IN"); };
+      var inrFmt = function(n){ return "\u20B9" + Math.round(n).toLocaleString("en-IN"); };
       var bundleRate = function(c){ return c <= 1 ? 0 : c === 2 ? 0.10 : c === 3 ? 0.15 : 0.20; };
 
       function recalc(){
@@ -347,11 +347,11 @@
         $("[data-b-disc]").textContent = br ? (br*100).toFixed(0) + "%" : "—";
         var ebVal = $("[data-b-eb]"); if(ebVal) ebVal.textContent = eb ? "−15%" : "—";
         var onceRow = $("[data-b-once-row]"), moRow = $("[data-b-mo-row]");
-        if(onceSum > 0){ onceRow.style.display = ""; $("[data-b-once]").textContent = fmt(onceFinal); }
+        if(onceSum > 0){ onceRow.style.display = ""; $("[data-b-once]").textContent = inrFmt(onceFinal); }
         else onceRow.style.display = "none";
-        if(moSum > 0){ moRow.style.display = ""; $("[data-b-mo]").textContent = fmt(moFinal) + "/mo"; }
+        if(moSum > 0){ moRow.style.display = ""; $("[data-b-mo]").textContent = inrFmt(moFinal) + "/mo"; }
         else moRow.style.display = "none";
-        $("[data-b-save]").textContent = saved > 0 ? "You save " + fmt(saved) : "";
+        $("[data-b-save]").textContent = saved > 0 ? "You save " + inrFmt(saved) : "";
       }
       svcs.forEach(function(s){ s.addEventListener("click", function(){ s.classList.toggle("is-on"); recalc(); }); });
       if(ebBtn) ebBtn.addEventListener("click", function(){ ebOn = !ebOn; ebBtn.classList.toggle("is-on", ebOn); recalc(); });
