@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /admin
 Disallow: /profile.html
 Disallow: /profile
 Sitemap: https://www.nextimaginations.com/sitemap.xml

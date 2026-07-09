@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Admin — Next Imaginations</title>
+<link rel="icon" href="/assets/favicon.png">
+<style>
+  :root{--wine:#46101c;--wine-deep:#24080f;--wine-deeper:#170409;--gold:#c6a052;--gold-2:#e6cd91;
+    --paper:#f4ede3;--on-wine:#eedcd3;--on-wine-mute:#c2a09c;--line:rgba(198,160,82,.18);--line-2:rgba(198,160,82,.32);
+    --f:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"Spline Sans Mono",ui-monospace,Menlo,monospace}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--wine-deeper);color:var(--on-wine);font-family:var(--f);font-size:15px;line-height:1.5}
+  a{color:var(--gold-2)}
+  h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:600;color:var(--paper);margin:0}
+  .mono{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--on-wine-mute)}
+  .wrap{max-width:1200px;margin:0 auto;padding:24px}
+  /* login */
+  .login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{background:var(--wine);border:1px solid var(--line-2);border-radius:10px;padding:28px}
+  .login .card{width:100%;max-width:380px}
+  label{display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--on-wine-mute);margin:0 0 6px}
+  input,select,textarea{width:100%;background:var(--wine-deep);border:1px solid var(--line-2);border-radius:6px;color:var(--paper);
+    font:inherit;padding:10px 12px;margin-bottom:14px}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+  select option{background:var(--wine-deep)}
+  button{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
+    background:var(--gold);color:var(--wine-deeper);border:0;border-radius:6px;padding:11px 18px;font-weight:600}
+  button.ghost{background:none;border:1px solid var(--line-2);color:var(--on-wine)}
+  button:disabled{opacity:.5;cursor:default}
+  .err{color:#eca3a3;font-size:.85rem;margin:6px 0 0;min-height:1em}
+  /* topbar */
+  .top{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:24px;flex-wrap:wrap}
+  .brand{font-family:Georgia,serif;font-size:1.3rem;color:var(--gold-2)}
+  .brand small{display:block;font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;color:var(--on-wine-mute);text-transform:uppercase;margin-top:2px}
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:24px}
+  .stat{background:var(--wine);border:1px solid var(--line);border-radius:8px;padding:16px}
+  .stat .n{font-family:Georgia,serif;font-size:1.8rem;color:var(--gold-2)}
+  .stat .l{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--on-wine-mute);margin-top:4px}
+  /* tabs */
+  .tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:18px}
+  .tab{background:none;border:0;border-bottom:2px solid transparent;color:var(--on-wine-mute);padding:8px 14px;margin-bottom:-1px}
+  .tab.on{color:var(--gold-2);border-color:var(--gold)}
+  /* table */
+  .panel{display:none}
+  .panel.on{display:block}
+  table{width:100%;border-collapse:collapse;font-size:.86rem}
+  th{text-align:left;font-family:var(--mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--on-wine-mute);
+    border-bottom:1px solid var(--line-2);padding:10px 10px}
+  td{border-bottom:1px solid var(--line);padding:10px 10px;vertical-align:top}
+  tr:hover td{background:rgba(198,160,82,.04)}
+  .pill{display:inline-block;font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;
+    padding:3px 8px;border-radius:20px;border:1px solid var(--line-2)}
+  .pill.new{color:#e6cd91;border-color:#c6a052}
+  .pill.won,.pill.received,.pill.active{color:#9ed8a8;border-color:#4c7a55}
+  .pill.lost,.pill.closed,.pill.cancelled{color:#c2a09c}
+  .pill.pending,.pill.quoted,.pill.contacted{color:#e0b978}
+  select.status{width:auto;margin:0;padding:4px 8px;font-size:.78rem}
+  .muted{color:var(--on-wine-mute)}
+  .row-form{background:var(--wine);border:1px solid var(--line-2);border-radius:8px;padding:18px;margin-bottom:20px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0 14px;align-items:end}
+  .grid .full{grid-column:1/-1}
+  .flash{position:fixed;bottom:20px;right:20px;background:var(--wine);border:1px solid var(--gold);border-radius:8px;padding:12px 18px;color:var(--gold-2);opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none}
+  .flash.show{opacity:1;transform:none}
+  .reply{border-left:2px solid var(--line-2);padding:6px 0 6px 12px;margin:8px 0}
+  .reply.studio{border-color:var(--gold)}
+  details{margin-bottom:10px;border:1px solid var(--line);border-radius:8px;padding:10px 14px;background:var(--wine)}
+  summary{cursor:pointer;font-weight:600}
+</style>
+</head>
+<body>
+<!-- LOGIN -->
+<div class="login" data-login>
+  <div class="card">
+    <div class="brand">Next Imaginations<small>Admin console</small></div>
+    <form data-login-form style="margin-top:20px">
+      <label for="pw">Admin password</label>
+      <input id="pw" name="password" type="password" autocomplete="current-password" placeholder="••••••••" autofocus>
+      <button type="submit" style="width:100%">Sign in</button>
+      <p class="err" data-login-err></p>
+    </form>
+    <p class="mono" style="margin-top:14px">Your ADMIN_TOKEN is the password. It's exchanged for a secure session cookie — never stored in the browser.</p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="wrap" data-dash style="display:none">
+  <div class="top">
+    <div class="brand">Next Imaginations<small>Admin console</small></div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="ghost" data-refresh>Refresh</button>
+      <button class="ghost" data-logout>Sign out</button>
+    </div>
+  </div>
+
+  <div class="stats" data-stats></div>
+
+  <div class="tabs">
+    <button class="tab on" data-tab="leads">Leads</button>
+    <button class="tab" data-tab="clients">Clients</button>
+    <button class="tab" data-tab="orders">Orders</button>
+    <button class="tab" data-tab="payments">Payments</button>
+    <button class="tab" data-tab="tickets">Support</button>
+  </div>
+
+  <div class="panel on" data-panel="leads">
+    <h3 style="margin-bottom:12px">Lead pipeline</h3>
+    <table><thead><tr><th>When</th><th>Name</th><th>Email</th><th>Source</th><th>Message</th><th>Status</th></tr></thead>
+      <tbody data-leads></tbody></table>
+  </div>
+
+  <div class="panel" data-panel="clients">
+    <h3 style="margin-bottom:12px">Clients</h3>
+    <table><thead><tr><th>Joined</th><th>Name</th><th>Email</th><th>Company</th><th>Phone</th><th>Verified</th></tr></thead>
+      <tbody data-clients></tbody></table>
+  </div>
+
+  <div class="panel" data-panel="orders">
+    <div class="row-form">
+      <h3 style="margin-bottom:12px">Create order / project</h3>
+      <form data-order-form><div class="grid">
+        <div><label>Client email</label><input name="email" type="email" placeholder="client@example.com"></div>
+        <div><label>Title</label><input name="title" placeholder="Website revamp"></div>
+        <div><label>Service</label><input name="service" placeholder="Web development"></div>
+        <div><label>Amount (₹)</label><input name="amount_inr" type="number" min="0" placeholder="45000"></div>
+        <div><label>Status</label><select name="status"><option>quoted</option><option>active</option><option>delivered</option><option>closed</option><option>cancelled</option></select></div>
+        <div><button type="submit">Create order</button></div>
+      </div><p class="err" data-order-err></p></form>
+    </div>
+    <table><thead><tr><th>When</th><th>Title</th><th>Client</th><th>Amount</th><th>Status</th><th>Stage</th></tr></thead>
+      <tbody data-orders></tbody></table>
+  </div>
+
+  <div class="panel" data-panel="payments">
+    <div class="row-form">
+      <h3 style="margin-bottom:12px">Record payment</h3>
+      <form data-payment-form><div class="grid">
+        <div><label>Client email</label><input name="email" type="email" placeholder="client@example.com"></div>
+        <div><label>Order ID (optional)</label><input name="order_id" placeholder="paste order id"></div>
+        <div><label>Amount (₹)</label><input name="amount_inr" type="number" min="0" placeholder="20000"></div>
+        <div><label>Method</label><select name="method"><option>upi</option><option>bank</option><option>card</option><option>cash</option><option>gateway</option></select></div>
+        <div><label>Status</label><select name="status"><option>received</option><option>pending</option><option>refunded</option></select></div>
+        <div><button type="submit">Record payment</button></div>
+      </div><p class="err" data-payment-err></p></form>
+    </div>
+    <table><thead><tr><th>When</th><th>Client</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead>
+      <tbody data-payments></tbody></table>
+  </div>
+
+  <div class="panel" data-panel="tickets">
+    <h3 style="margin-bottom:12px">Support tickets</h3>
+    <div data-tickets></div>
+  </div>
+</div>
+
+<div class="flash" data-flash></div>
+<script src="/assets/admin.js?v=68dcd38b"></script>
+</body>
+</html>

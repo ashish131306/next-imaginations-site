@@ -5,7 +5,7 @@
 # stay fully cached. Re-run on every deploy; it's idempotent.
 import re, hashlib, pathlib, sys
 root = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else '.')
-ASSETS = ['styles.css', 'app.js', 'api-base.js', 'account.js', 'fonts.css']
+ASSETS = ['styles.css', 'app.js', 'api-base.js', 'account.js', 'fonts.css', 'admin.js']
 ver = {}
 for name in ASSETS:
     f = root / 'assets' / name
