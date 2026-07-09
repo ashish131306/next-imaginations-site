@@ -254,11 +254,17 @@
         const rz = new Razorpay({ key: r3.keyId, amount: r3.amount, currency: "INR", name: "Next Imaginations", order_id: r3.orderId,
           prefill: { name: r3.name, email: r3.email },
           theme: { color: "#C6A052" },
+          modal: { ondismiss: () => { b.disabled = false; b.textContent = "Pay now"; } },
           handler: async (resp) => {
             const v = await api(`/me/payments/${b.dataset.pay}/rzp-verify`, { method: "POST", body: { order_id: resp.razorpay_order_id, payment_id: resp.razorpay_payment_id, signature: resp.razorpay_signature } });
-            alert(v.ok ? "Payment received — thank you!" : (v.error || "Verification failed."));
+            alert(v.ok ? "Payment received — thank you!" : (v.error || "We couldn't verify that payment. If any amount was deducted it will be auto-refunded; please contact us."));
             if (v.ok) location.reload();
           } });
+        rz.on("payment.failed", (resp) => {
+          b.disabled = false; b.textContent = "Pay now";
+          alert("Payment failed: " + ((resp.error && resp.error.description) || "please try again or use another method."));
+        });
+        b.disabled = true; b.textContent = "Opening…";
         rz.open();
       });
 
