@@ -922,8 +922,18 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .std span{font-size:.82rem;color:var(--on-wine-mute)}
 .spots{display:inline-flex;align-items:center;gap:.5rem;margin-top:.8rem;font-family:var(--f-mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-2)}
 .spots i{width:7px;height:7px;border-radius:50%;background:var(--gold-2);animation:ping 1.6s infinite;font-style:normal}
-.map-embed{border:1px solid var(--gold-line-2);filter:grayscale(1) invert(.92) hue-rotate(180deg) saturate(.4);width:100%;height:280px}
-.cal-embed{border:1px solid var(--gold-line-2);width:100%;height:660px;background:var(--wine-deep)}
+.contact-card{display:flex;flex-wrap:wrap;gap:1.25rem 2rem;align-items:center;justify-content:space-between;
+  border:1px solid var(--gold-line-2);border-radius:4px;padding:1.75rem 2rem;background:var(--wine-deep);margin-top:2rem}
+.contact-card__body{max-width:48ch}
+.contact-card__body p{margin:0}
+.contact-card__k{display:block;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-2);margin-bottom:.55rem}
+.contact-card__actions{display:flex;flex-wrap:wrap;gap:.75rem}
+.contact-card--link{text-decoration:none;color:inherit;transition:border-color .35s var(--ease),background .35s var(--ease),transform .35s var(--ease)}
+.contact-card--link:hover{border-color:var(--gold-line);background:var(--wine-rich);transform:translateY(-2px)}
+.contact-card__cta{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-2);white-space:nowrap}
+/* accessible keyboard focus (professional + WCAG) */
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{
+  outline:2px solid var(--gold-2);outline-offset:3px;border-radius:2px}
 @media(max-width:600px){.wa-float{right:14px;bottom:14px;width:50px;height:50px}}
 
 /* ═══ v7: logo chip + trust signals ═══ */
