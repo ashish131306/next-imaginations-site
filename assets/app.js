@@ -135,6 +135,10 @@
     if(reduce || !("IntersectionObserver" in window)){
       reveals.forEach(function(el){ el.classList.add("in"); });
     } else {
+      // Anything already within the first viewport reveals at once — no blank hero.
+      reveals.forEach(function(el){
+        if(el.getBoundingClientRect().top < innerHeight * 0.92) el.classList.add("in");
+      });
       var io = new IntersectionObserver(function(entries){
         entries.forEach(function(en){
           if(en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); }
@@ -212,38 +216,8 @@
       } else counters.forEach(run);
     }
 
-    /* ───── custom cursor + magnet + labels ───── */
+    /* ───── magnet on interactive elements (native cursor kept) ───── */
     if(fine && !reduce){
-      var ring = document.createElement("div"); ring.className = "cursor";
-      var txt = document.createElement("span"); txt.className = "cursor__txt"; ring.appendChild(txt);
-      var dot = document.createElement("div"); dot.className = "cursor-dot";
-      document.body.appendChild(ring); document.body.appendChild(dot);
-      document.body.classList.add("cursor-ready");
-      requestAnimationFrame(function(){ ring.classList.add("ready"); dot.classList.add("ready"); });
-
-      var mx = innerWidth/2, my = innerHeight/2, rx = mx, ry = my;
-      window.addEventListener("mousemove", function(e){
-        mx = e.clientX; my = e.clientY;
-        dot.style.transform = "translate("+mx+"px,"+my+"px) translate(-50%,-50%)";
-      });
-      (function loop(){
-        rx += (mx-rx)*0.16; ry += (my-ry)*0.16;
-        ring.style.transform = "translate("+rx+"px,"+ry+"px) translate(-50%,-50%)";
-        requestAnimationFrame(loop);
-      })();
-
-      var bind = function(el){
-        el.addEventListener("mouseenter", function(){
-          var label = el.getAttribute("data-cursor");
-          if(label){ txt.textContent = label; ring.classList.add("is-label"); }
-          else ring.classList.add("is-hot");
-        });
-        el.addEventListener("mouseleave", function(){
-          ring.classList.remove("is-hot","is-label");
-        });
-      };
-      document.querySelectorAll("a,button,input,textarea,.select__opt,[data-cursor]").forEach(bind);
-
       document.querySelectorAll("[data-magnet]").forEach(function(el){
         var strength = parseFloat(el.getAttribute("data-magnet")) || 0.3;
         el.addEventListener("mousemove", function(e){

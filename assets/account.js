@@ -4,9 +4,10 @@
   "use strict";
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  const API_ROOT = (window.__API_BASE || "");
   const api = async (path, opts = {}) => {
-    const res = await fetch("/api/auth" + path, {
-      credentials: "same-origin",
+    const res = await fetch(API_ROOT + "/api/auth" + path, {
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       ...opts,
       body: opts.body ? JSON.stringify(opts.body) : undefined,

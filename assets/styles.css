@@ -233,7 +233,6 @@ body.is-loading{overflow:hidden}
 .cursor.is-label .cursor__txt{opacity:1}
 .cursor.is-label~.cursor-dot,.cursor.is-hot~.cursor-dot{opacity:0}
 @media (hover:hover) and (pointer:fine){
-  body.cursor-ready,body.cursor-ready a,body.cursor-ready button{cursor:none}
   .cursor.ready,.cursor-dot.ready{opacity:1}
 }
 
@@ -693,6 +692,10 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .field input::placeholder,.field textarea::placeholder{color:var(--on-wine-faint)}
 .field input:focus,.field textarea:focus{outline:none;border-color:var(--gold);background:rgba(23,4,9,.7)}
 .field input.err,.field textarea.err{border-color:#d98b8b}
+.field input:-webkit-autofill,.field input:-webkit-autofill:hover,.field input:-webkit-autofill:focus{
+  -webkit-text-fill-color:var(--paper);caret-color:var(--paper);
+  -webkit-box-shadow:0 0 0 1000px rgba(23,4,9,.85) inset;box-shadow:0 0 0 1000px rgba(23,4,9,.85) inset;
+  transition:background-color 9999s ease-out 0s}
 .form-error{grid-column:1/-1;color:#e8a9a9;font-size:.88rem;display:none}
 .form-error.show{display:block}
 .form__submit{grid-column:1/-1;display:flex;align-items:center;gap:1.6rem;flex-wrap:wrap;margin-top:.4rem}
