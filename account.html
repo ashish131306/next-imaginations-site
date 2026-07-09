@@ -19,7 +19,7 @@
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <link href="/assets/fonts.css?v=4eaf30cd" rel="stylesheet">
-<link rel="stylesheet" href="/assets/styles.css?v=f8e418e1">
+<link rel="stylesheet" href="/assets/styles.css?v=8a7b5e1f">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ProfessionalService","name":"Next Imaginations","url":"https://www.nextimaginations.com","slogan":"Build the new horizon.","description":"Access your client account: sign in with your password or a one-time email code, or create an account with explicit consent under the DPDP Act, 2023.","telephone":"+91 89300 06242","email":"nextimaginations@gmail.com","foundingDate":"2022","address":{"@type":"PostalAddress","addressLocality":"Chandigarh","addressCountry":"IN"},"areaServed":"IN","priceRange":"₹₹ · ₹5,999–₹1,50,000+"}</script>
 </head>
 <body class="is-loading">
@@ -124,6 +124,14 @@
                 </div>
                 <p class="form-error" role="alert"></p>
                 <p class="devnote"></p>
+              </div>
+              <div data-login-totp style="display:none">
+                <p class="muted" style="font-size:.92rem;margin-bottom:1rem">This account is protected by an authenticator app. Enter the current 6-digit code from Google Authenticator, Authy or your app.</p>
+                <div class="code-row">
+                  <div class="field"><label for="li-totp">Authenticator code</label><input id="li-totp" name="totpcode" type="text" inputmode="numeric" maxlength="6" placeholder="••••••"></div>
+                  <button class="btn btn--solid btn--line" type="button" data-login-totp-btn>Verify <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M13 6l6 6-6 6" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                </div>
+                <p class="form-error" data-login-totp-err role="alert"></p>
               </div>
               <p class="devnote"></p>
             </form>
@@ -246,6 +254,6 @@
   <p>We use one essential cookie to keep you signed in. Anonymous analytics run only with your permission. Details in our <a href="/privacy.html">Privacy Policy</a>.</p>
   <button class="btn" type="button" data-consent-essential>Essential only</button>
   <button class="btn btn--solid" type="button" data-consent-all>Allow analytics</button>
-</div><script src="/assets/api-base.js?v=573ad206"></script><script src="/assets/app.js?v=56836cbf"></script><script src="/assets/account.js?v=caf8d2c7"></script>
+</div><script src="/assets/api-base.js?v=573ad206"></script><script src="/assets/app.js?v=56836cbf"></script><script src="/assets/account.js?v=ec213a0e"></script>
 </body>
 </html>

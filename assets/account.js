@@ -54,6 +54,11 @@
         dev(devbox, r.devOtp);
         return;
       }
+      if (r.next === "totp") {
+        $("[data-login-step1]", fLogin).style.display = "none";
+        $("[data-login-totp]", fLogin).style.display = "block";
+        return;
+      }
       location.href = "/profile";
     });
     const mfaResend = $("[data-mfa-resend]");
@@ -67,6 +72,13 @@
     $("[data-login-mfa-btn]").addEventListener("click", async () => {
       const box = $(".form-error", fLogin);
       const r = await api("/login/mfa", { method: "POST", body: { email: fLogin.email.value.trim(), code: fLogin.mfacode.value.trim() } });
+      if (!r.ok) return err(box, r.error);
+      location.href = "/profile";
+    });
+    const totpLoginBtn = $("[data-login-totp-btn]");
+    if (totpLoginBtn) totpLoginBtn.addEventListener("click", async () => {
+      const box = $("[data-login-totp-err]");
+      const r = await api("/login/totp", { method: "POST", body: { email: fLogin.email.value.trim(), code: fLogin.totpcode.value.trim() } });
       if (!r.ok) return err(box, r.error);
       location.href = "/profile";
     });
@@ -156,6 +168,8 @@
       const sw = $("[data-mfa-state]");
       sw.textContent = me.mfaEnabled ? "Enabled" : "Disabled";
       $("[data-mfa-toggle]").textContent = me.mfaEnabled ? "Turn off" : "Turn on";
+      const tw = $("[data-totp-state]");
+      if (tw) { tw.textContent = me.totpEnabled ? "Enabled" : "Disabled"; $("[data-totp-toggle]").textContent = me.totpEnabled ? "Turn off" : "Set up"; }
     };
 
     (async () => {
@@ -320,6 +334,32 @@
       if (!r.ok) return err(box, r.error);
       me.mfaEnabled = r.mfaEnabled; paintBadges();
       mfaBox.style.display = "none"; $("[data-mfa-input]").value = "";
+    });
+
+    /* authenticator app (TOTP) — free 2FA */
+    const totpToggle = $("[data-totp-toggle]"), totpSetup = $("[data-totp-setup]"), totpErr = $("[data-totp-error]");
+    if (totpToggle) totpToggle.addEventListener("click", async () => {
+      err(totpErr, "");
+      if (me.totpEnabled) {
+        const pw = window.prompt("Enter your password to turn off the authenticator:");
+        if (pw === null) return;
+        const r = await api("/me/totp/disable", { method: "POST", body: { password: pw } });
+        if (!r.ok) return err(totpErr, r.error);
+        me.totpEnabled = false; paintBadges(); totpSetup.style.display = "none";
+        return;
+      }
+      const r = await api("/me/totp/setup", { method: "POST" });
+      if (!r.ok) return err(totpErr, r.error);
+      if (r.qr) $("[data-totp-qr]").src = r.qr;
+      $("[data-totp-secret]").textContent = r.secret;
+      totpSetup.style.display = "block";
+    });
+    const totpConfirm = $("[data-totp-confirm]");
+    if (totpConfirm) totpConfirm.addEventListener("click", async () => {
+      err(totpErr, "");
+      const r = await api("/me/totp/enable", { method: "POST", body: { code: $("[data-totp-input]").value.trim() } });
+      if (!r.ok) return err(totpErr, r.error);
+      me.totpEnabled = true; paintBadges(); totpSetup.style.display = "none"; $("[data-totp-input]").value = "";
     });
 
     /* sign out everywhere else */

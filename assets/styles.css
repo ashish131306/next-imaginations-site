@@ -975,3 +975,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 .pay-line{display:flex;justify-content:space-between;padding:.28rem 0;color:var(--on-wine-mute)}
 .pay-total{border-top:1px solid var(--gold-line-2);margin-top:.5rem;padding-top:.7rem;color:var(--paper);font-family:Georgia,serif;font-size:1.25rem}
 .pay-total span:last-child{color:var(--gold-2)}
+.totp-enroll{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start;border:1px solid var(--gold-line-2);border-radius:8px;padding:1.2rem;background:var(--wine-deep)}
+.totp-enroll img{border-radius:8px;background:#F4EDE3;padding:6px;flex:0 0 auto}
+.totp-enroll__side{flex:1;min-width:240px}
+.totp-enroll code{font-family:var(--f-mono);color:var(--gold-2);word-break:break-all;font-size:.78rem}
