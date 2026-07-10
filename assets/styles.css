@@ -979,3 +979,25 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,
 .totp-enroll img{border-radius:8px;background:#F4EDE3;padding:6px;flex:0 0 auto}
 .totp-enroll__side{flex:1;min-width:240px}
 .totp-enroll code{font-family:var(--f-mono);color:var(--gold-2);word-break:break-all;font-size:.78rem}
+/* ─────────── subscription plans ─────────── */
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.4rem;margin-top:2.4rem}
+.plan{position:relative;display:flex;flex-direction:column;background:var(--wine-deep);border:1px solid var(--gold-line-2);border-radius:12px;padding:1.9rem}
+.plan--featured{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
+.plan__tag{position:absolute;top:-.7rem;left:1.9rem;background:var(--gold);color:var(--wine-deeper);font-family:var(--f-mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;padding:.28rem .7rem;border-radius:20px}
+.plan__k{font-family:var(--f-mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--on-wine-mute)}
+.plan__name{font-family:var(--f-display);font-size:1.7rem;color:var(--paper);margin:.35rem 0 .1rem}
+.plan__price{font-family:var(--f-display);font-size:2rem;color:var(--gold-2);margin:.2rem 0 .1rem}
+.plan__price span{font-family:var(--f-sans);font-size:.9rem;color:var(--on-wine-mute)}
+.plan__for{color:var(--on-wine-mute);font-size:.9rem;margin:.4rem 0 1.1rem;min-height:2.6em}
+.plan__list{list-style:none;padding:0;margin:0 0 1.5rem;flex:1}
+.plan__list li{position:relative;padding:.42rem 0 .42rem 1.5rem;font-size:.9rem;color:var(--on-wine);border-bottom:1px solid var(--gold-line-2)}
+.plan__list li:before{content:"";position:absolute;left:0;top:.95em;width:.5rem;height:.5rem;border-left:1.5px solid var(--gold);border-bottom:1.5px solid var(--gold);transform:rotate(-45deg)}
+.plan__list li b{color:var(--paper)}
+.plan .btn{width:100%;justify-content:center}
+.retainers{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.2rem;margin-top:1.8rem}
+.retainer{display:flex;flex-direction:column;justify-content:space-between;gap:1rem;background:var(--wine-deep);border:1px solid var(--gold-line-2);border-radius:10px;padding:1.5rem;text-decoration:none;color:inherit;transition:border-color .3s var(--ease),transform .3s var(--ease)}
+.retainer:hover{border-color:var(--gold);transform:translateY(-3px)}
+.retainer h4{font-family:var(--f-display);font-size:1.2rem;color:var(--paper);margin:.3rem 0 .4rem}
+.retainer .muted{font-size:.88rem}
+.retainer__price{font-family:var(--f-display);font-size:1.35rem;color:var(--gold-2);margin:0}
+.retainer__price span{font-family:var(--f-sans);font-size:.82rem;color:var(--on-wine-mute)}
