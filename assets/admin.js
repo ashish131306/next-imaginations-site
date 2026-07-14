@@ -80,8 +80,8 @@
         <td class="muted" style="white-space:nowrap">${when(r.created_at)}</td>
         <td>${esc(r.name)}</td>
         <td><a href="mailto:${esc(r.email)}">${esc(r.email)}</a></td>
-        <td><span class="pill">${esc(r.source || "contact")}</span></td>
-        <td style="max-width:340px">${esc(r.message || "").slice(0, 220)}${r.interest ? `<br><span class="muted">Interest: ${esc(r.interest)}</span>` : ""}</td>
+        <td><span class="pill">${esc(r.source || "contact")}</span>${r.channel ? `<br><span class="muted" style="font-size:.7rem">${esc(r.channel)}</span>` : ""}${r.utm && r.utm.campaign ? `<br><span class="muted" style="font-size:.68rem">${esc(r.utm.campaign)}</span>` : ""}</td>
+        <td style="max-width:340px">${esc(r.message || "").slice(0, 220)}${r.interest ? `<br><span class="muted">Interest: ${esc(r.interest)}</span>` : ""}${r.budget ? `<br><span class="muted" style="font-size:.72rem">Budget: ${esc(r.budget)}</span>` : ""}${r.timeline ? ` <span class="muted" style="font-size:.72rem">&middot; Timeline: ${esc(r.timeline)}</span>` : ""}</td>
         <td><select class="status" data-lead="${r.id}">${STATUSES.map((s) => `<option ${s === r.status ? "selected" : ""}>${s}</option>`).join("")}</select></td>
       </tr>`).join("") : `<tr><td colspan="6" class="muted">No leads yet.</td></tr>`;
     $$("[data-lead]").forEach((sel) => sel.addEventListener("change", async () => {

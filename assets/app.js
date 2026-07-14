@@ -435,7 +435,8 @@
           f.classList.toggle("err", bad); if(bad) ok = false;
         });
         if(!ok){ showErr("Please add your name, a valid email, a short message, and tick the consent box."); return; }
-        var payload = { name:val("name"), email:val("email"), company:val("company"), interest:val("interest"), message:val("message"), website:val("website"), source:"contact", consent:true };
+        var payload = { name:val("name"), email:val("email"), company:val("company"), interest:val("interest"), message:val("message"), website:val("website"), source:"contact", consent:true, budget:val("budget"), timeline:val("timeline") };
+        try { if(window.NILeadMeta){ payload.meta = window.NILeadMeta.get(); } } catch(_e){}
         if(location.protocol === "file:"){
           showErr("This page was opened directly from a file, so it can't reach the server. Please open the site at http://localhost:3000 (the address shown in your terminal) instead of double-clicking the HTML file.");
           return;
